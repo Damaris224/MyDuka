@@ -1,5 +1,5 @@
 #conncets python and interacts with psql
-import psychopg2 
+import psychopg2  
 
 conn = psychopg2.connect(
     host="localhost",#runs locally
@@ -43,6 +43,7 @@ product2 = ('hp',30000,40000)
 insert_products(product1)
 insert_products(product2)
 
+#fetches sales from the database and returns them as a list of tuples
 def get_sales(): 
     cur.execute("SELECT * FROM sales") 
     sales = cur.fetchall() 
@@ -56,9 +57,64 @@ def insert_sale(values):
     cur.execute("INSERT INTO sales(product_id, quantity, total_amount) VALUES %s", (values,)) 
     conn.commit() 
     
-# Example sales data (assuming product_id exists in products table) 
-sale1 = (1, 2, 60000) # product_id=1, quantity=2, total_amount=60000
-sale2 = (2, 1, 40000) # product_id=2, quantity=1, total_amount=40000
+ 
+sale1 = (1, 2, 60000)
+sale2 = (2, 1, 40000) 
 
 insert_sale(sale1) 
 insert_sale(sale2)
+
+#profit per
+#select p.name, (products.selling_price *sales.quantity)as total_sales from products
+def sales_per_products():
+    cur.execute("""SELECT products_name as p.name,sum(products.selling_price * sales.quantity) aS total_sales from products JOIN sales ON sales.pid = product.id group by (p_name)""")
+    sales_per_product = cur.fetchall()
+    return sales_per_product
+
+sales_per_product = sales_per_products()
+print(sales_per_product)
+
+def get_profit_per_day():
+    cur.execute("""
+                select date(sales.created_at) as date ,sum((products.selling_price - products.buying_price) * sales.quantity) as profit from sales join products on products.id = sales.product_id group by date order by date;
+                """)
+    profit_per_day = cur.fetchall()
+    return profit_per_day
+
+profit_per_day = get_profit_per_day()
+print(profit_per_day)
+  #q1
+  #insert stock data
+def insert_stock(values):
+    cur.execute("INSERT INTO stock (pid, quantity) VALUES (%s, %s)", values)
+    conn.commit()
+#fetch
+def fetch_stock_data():
+    cur.execute("SELECT * FROM stock")
+    return cur.fetchall()
+
+#sales per day
+def get_sales_per_day():
+    cur.execute("""
+        SELECT DATE(sales.created_at) AS sale_date, 
+               SUM(products.selling_price * sales.quantity) AS daily_revenue
+        FROM sales 
+        JOIN products ON products.id = sales.pid 
+        GROUP BY sale_date 
+        ORDER BY sale_date DESC;
+    """)
+    return cur.fetchall()
+
+#profit per day
+def get_profit_per_day():
+    cur.execute("""
+        SELECT DATE(sales.created_at) AS sale_date, 
+               SUM((products.selling_price - products.buying_price) * sales.quantity) AS daily_profit
+        FROM sales 
+        JOIN products ON products.id = sales.pid 
+        GROUP BY sale_date 
+        ORDER BY sale_date DESC;
+    """)
+    return cur.fetchall()
+   
+
