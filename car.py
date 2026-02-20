@@ -85,3 +85,17 @@ class Audi(Car):
             print(f"Audi {self.model} powered through {distance} km. Remaining fuel: {self.fuel_level:.1f}")
         else:
             print("Audi does not have enough fuel for this journey.")
+
+toyota_car = Toyota("Toyota", "Corolla", 2022, 50) 
+audi_car = Audi("Audi", "A4", 2023, 60) 
+toyota_car.refuel(30) 
+toyota_car.start() 
+toyota_car.drive(100) 
+toyota_car.display_car_info() 
+toyota_car.stop()
+
+audi_car.refuel(40) 
+audi_car.start() 
+audi_car.drive(100) 
+audi_car.display_car_info() 
+audi_car.stop()
