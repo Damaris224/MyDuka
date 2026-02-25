@@ -20,6 +20,7 @@ def get_products():
     products = cur.fetchall()
     return products
 
+
 # products = get_products()
 # print(products)
 
@@ -128,8 +129,7 @@ print(profit_per_product)
 
 
 
-cur.close()
-conn.close()
+
 
    
 
