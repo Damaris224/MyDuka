@@ -1,7 +1,40 @@
 {% extends 'base.html' %}
-{% block title %} Stock {% endblock %}
+{% block title %}Stock{% endblock %}
 {% block content %}
-    <div>
-        <p>This is the stock page</p>
-    </div>
+<div class="container mt-4">
+    <h2>Stock Management</h2>
+
+    <!-- Insert Stock Form -->
+    <form method="POST" action="/stock" class="mb-4">
+        <div class="mb-3">
+            <label for="pid" class="form-label">Product ID</label>
+            <input type="number" class="form-control" id="pid" name="pid" required>
+        </div>
+        <div class="mb-3">
+            <label for="stock_quantity" class="form-label">Stock Quantity</label>
+            <input type="number" class="form-control" id="stock_quantity" name="stock_quantity" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Stock</button>
+    </form>
+
+  
+    <table id="example" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Stock ID</th>
+                <th>Product ID</th>
+                <th>Stock Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in stock %}
+            <tr>
+                <td>{{ s[0] }}</td>
+                <td>{{ s[1] }}</td>
+                <td>{{ s[2] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
